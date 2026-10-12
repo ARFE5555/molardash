@@ -32,6 +32,7 @@ button{font:inherit;border:1px solid #d5dde9;background:#fff;border-radius:8px;p
 <p class="muted" id="hint">Entra con tu cuenta de Google.</p>
 </div></div>
 <script>
+(()=>{
 const SUPABASE_URL='https://quxegznlgbzrtrqlqxgq.supabase.co';
 const SUPABASE_KEY='sb_publishable_hEFzoaq8yS2JckeRq9UYhw_Qm9AHuSG';
 const GOOGLE_CLIENT_ID='181500076037-96bglt3ct8dahrojslqfr2nlf5pg012g.apps.googleusercontent.com';
@@ -63,6 +64,7 @@ async function mostrarLogin(){
   }catch(e){ msg(e.message||String(e)); }
 }
 (async()=>{ const {data}=await sb.auth.getSession(); if(data.session) cargarApp(); else mostrarLogin(); })();
+})();
 </script>
 </body>
 </html>
