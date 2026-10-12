@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>MolarDash</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M20 6C12 6 8 12 8 20c0 8 3 13 5 20 2 8 2 18 7 18s5-12 8-17c2-3 6-3 8 0 3 5 3 17 8 17s5-10 7-18c2-7 5-12 5-20 0-8-4-14-12-14-5 0-8 3-12 3s-7-3-12-3z' fill='none' stroke='%230f1b2d' stroke-width='5.5' stroke-linejoin='round'/></svg>">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="MolarDash">
+<meta name="application-name" content="MolarDash">
+<meta name="theme-color" content="#0f1b2d">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#0f1b2d;font-size:14px}
+.login{min-height:100vh;display:grid;place-items:center;padding:16px;box-sizing:border-box;background:linear-gradient(160deg,#0b1f3a 0%,#1d3d6e 100%)}
+.card{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:400px;width:100%;box-sizing:border-box;text-align:center;padding:34px 28px}
+h1{margin:0 0 6px;font-size:22px}.sub{color:#5b6b82;margin:0 0 20px;font-size:13px;line-height:1.45}
+.muted{color:#5b6b82;font-size:12px;margin-top:14px}.info{background:#e9eff8;color:#1d3d6e;border-radius:8px;padding:10px 12px;font-size:13px;text-align:left;margin-bottom:14px}
+button{font:inherit;border:1px solid #d5dde9;background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;color:#0f1b2d}
+</style>
+</head>
+<body>
+<div class="login"><div class="card">
+<svg viewBox="0 0 64 64" width="60" height="60" style="display:block;margin:0 auto 12px" aria-label="MolarDash"><path d="M20 6C12 6 8 12 8 20c0 8 3 13 5 20 2 8 2 18 7 18s5-12 8-17c2-3 6-3 8 0 3 5 3 17 8 17s5-10 7-18c2-7 5-12 5-20 0-8-4-14-12-14-5 0-8 3-12 3s-7-3-12-3z" fill="none" stroke="#0f1b2d" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<h1>MolarDash</h1><p class="sub">Sistema para consultorios odontológicos</p>
+<div id="msg"></div>
+<div id="gbtn" style="display:flex;justify-content:center;min-height:44px"><span class="muted" style="margin:0">Cargando…</span></div>
+<p class="muted" id="hint">Entra con tu cuenta de Google.</p>
+</div></div>
+<script>
+const SUPABASE_URL='https://quxegznlgbzrtrqlqxgq.supabase.co';
+const SUPABASE_KEY='sb_publishable_hEFzoaq8yS2JckeRq9UYhw_Qm9AHuSG';
+const GOOGLE_CLIENT_ID='181500076037-96bglt3ct8dahrojslqfr2nlf5pg012g.apps.googleusercontent.com';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const wait=(f,ms=15000)=>new Promise((ok,ko)=>{const t0=Date.now();(function r(){if(f())return ok();if(Date.now()-t0>ms)return ko(new Error('No se pudo cargar Google. Revisa tu conexión.'));setTimeout(r,80)})()});
+async function sha256hex(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function msg(t){$('#msg').innerHTML=t?`<div class="info">${esc(t)}</div>`:''}
+async function cargarApp(){
+  $('#gbtn').innerHTML='<span class="muted" style="margin:0">Abriendo MolarDash…</span>'; $('#hint').textContent='';
+  const {data,error}=await sb.from('app_bundle').select('html').eq('id','app').maybeSingle();
+  if(error||!data){ await sb.auth.signOut(); msg('Tu cuenta no tiene acceso a MolarDash.'); return mostrarLogin(); }
+  document.open(); document.write(data.html); document.close();
+}
+async function mostrarLogin(){
+  $('#hint').textContent='Entra con tu cuenta de Google.';
+  try{
+    await wait(()=>window.google?.accounts?.id);
+    const raw=crypto.randomUUID()+crypto.randomUUID(), hashed=await sha256hex(raw);
+    google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,nonce:hashed,auto_select:false,itp_support:true,callback:async r=>{
+      $('#gbtn').innerHTML='<span class="muted" style="margin:0">Entrando…</span>';
+      const {error}=await sb.auth.signInWithIdToken({provider:'google',token:r.credential,nonce:raw});
+      if(error){ msg('No se pudo iniciar sesión: '+(error.message||error)); return mostrarLogin(); }
+      cargarApp();
+    }});
+    $('#gbtn').innerHTML='';
+    google.accounts.id.renderButton($('#gbtn'),{theme:'filled_blue',size:'large',text:'signin_with',shape:'pill',locale:'es',width:300});
+  }catch(e){ msg(e.message||String(e)); }
+}
+(async()=>{ const {data}=await sb.auth.getSession(); if(data.session) cargarApp(); else mostrarLogin(); })();
+</script>
+</body>
+</html>
