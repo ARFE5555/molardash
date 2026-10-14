@@ -44,9 +44,15 @@ async function sha256hex(t){const b=await crypto.subtle.digest('SHA-256',new Tex
 function msg(t){$('#msg').innerHTML=t?`<div class="info">${esc(t)}</div>`:''}
 async function cargarApp(){
   $('#gbtn').innerHTML='<span class="muted" style="margin:0">Abriendo MolarDash…</span>'; $('#hint').textContent='';
-  const {data,error}=await sb.from('app_bundle').select('html').eq('id','app').maybeSingle();
-  if(error||!data){ await sb.auth.signOut(); msg('Tu cuenta no tiene acceso a MolarDash.'); return mostrarLogin(); }
+  const admin=/^#\/admin\b/.test(location.hash);
+  const {data,error}=await sb.from('app_bundle').select('html').eq('id',admin?'admin':'app').maybeSingle();
+  if(admin&&!error&&!data){ location.hash='#/inicio'; return cargarApp(); }
+  if(error||!data){ await sb.auth.signOut(); msg('Tu cuenta no tiene acceso a MolarDash. Pide al administrador que la active.'); return mostrarLogin(); }
   document.open(); document.write(data.html); document.close();
+}
+function errorIngreso(e){
+  const t=String(e?.message||e||'');
+  return /banned/i.test(t)?'Tu acceso a MolarDash está desactivado. Pide al administrador que lo active.':'No se pudo iniciar sesión: '+t;
 }
 async function mostrarLogin(){
   $('#hint').textContent='Entra con tu cuenta de Google.';
@@ -56,7 +62,7 @@ async function mostrarLogin(){
     google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,nonce:hashed,auto_select:false,itp_support:true,callback:async r=>{
       $('#gbtn').innerHTML='<span class="muted" style="margin:0">Entrando…</span>';
       const {error}=await sb.auth.signInWithIdToken({provider:'google',token:r.credential,nonce:raw});
-      if(error){ msg('No se pudo iniciar sesión: '+(error.message||error)); return mostrarLogin(); }
+      if(error){ msg(errorIngreso(error)); return mostrarLogin(); }
       cargarApp();
     }});
     $('#gbtn').innerHTML='';
