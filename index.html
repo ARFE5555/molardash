@@ -10,22 +10,24 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-title" content="MolarDash">
 <meta name="application-name" content="MolarDash">
-<meta name="theme-color" content="#0f1b2d">
+<meta name="theme-color" content="#F4F7FA">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#0f1b2d;font-size:14px}
-.login{min-height:100vh;display:grid;place-items:center;padding:16px;box-sizing:border-box;background:linear-gradient(160deg,#0b1f3a 0%,#1d3d6e 100%)}
-.card{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:400px;width:100%;box-sizing:border-box;text-align:center;padding:34px 28px}
-h1{margin:0 0 6px;font-size:22px}.sub{color:#5b6b82;margin:0 0 20px;font-size:13px;line-height:1.45}
-.muted{color:#5b6b82;font-size:12px;margin-top:14px}.info{background:#e9eff8;color:#1d3d6e;border-radius:8px;padding:10px 12px;font-size:13px;text-align:left;margin-bottom:14px}
+:root{--bg:#F4F7FA;--panel:#fff;--ink:#000;--muted:#6B7580;--celeste:#4FB3E8;--soft:#E6F4FC;--soft-ink:#0A6FA6}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--panel:#121518;--ink:#fff;--muted:#8F9AA5;--soft:rgba(92,189,238,.15);--soft-ink:#7FCDF3}}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+.login{min-height:100vh;display:grid;place-items:center;padding:16px;box-sizing:border-box;background:var(--bg)}
+.card{background:var(--panel);border-radius:20px;border-top:4px solid var(--celeste);box-shadow:0 0 0 1px rgba(127,140,155,.18),0 24px 64px rgba(10,30,50,.14);max-width:400px;width:100%;box-sizing:border-box;text-align:center;padding:34px 28px}
+h1{margin:0 0 6px;font-size:24px;letter-spacing:-.02em}.sub{color:var(--muted);margin:0 0 20px;font-size:13px;line-height:1.45}
+.muted{color:var(--muted);font-size:12px;margin-top:14px}.info{background:var(--soft);color:var(--soft-ink);border-radius:8px;padding:10px 12px;font-size:13px;text-align:left;margin-bottom:14px}
 button{font:inherit;border:1px solid #d5dde9;background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;color:#0f1b2d}
 </style>
 </head>
 <body>
 <div class="login"><div class="card">
-<svg viewBox="0 0 64 64" width="60" height="60" style="display:block;margin:0 auto 12px" aria-label="MolarDash"><path d="M20 6C12 6 8 12 8 20c0 8 3 13 5 20 2 8 2 18 7 18s5-12 8-17c2-3 6-3 8 0 3 5 3 17 8 17s5-10 7-18c2-7 5-12 5-20 0-8-4-14-12-14-5 0-8 3-12 3s-7-3-12-3z" fill="none" stroke="#0f1b2d" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<svg viewBox="0 0 64 64" width="60" height="60" style="display:block;margin:0 auto 12px" aria-label="MolarDash"><path d="M20 6C12 6 8 12 8 20c0 8 3 13 5 20 2 8 2 18 7 18s5-12 8-17c2-3 6-3 8 0 3 5 3 17 8 17s5-10 7-18c2-7 5-12 5-20 0-8-4-14-12-14-5 0-8 3-12 3s-7-3-12-3z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
 <h1>MolarDash</h1><p class="sub">Sistema para consultorios odontológicos</p>
 <div id="msg"></div>
 <div id="gbtn" style="display:flex;justify-content:center;min-height:44px"><span class="muted" style="margin:0">Cargando…</span></div>
