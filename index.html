@@ -44,9 +44,18 @@ async function sha256hex(t){const b=await crypto.subtle.digest('SHA-256',new Tex
 function msg(t){$('#msg').innerHTML=t?`<div class="info">${esc(t)}</div>`:''}
 async function cargarApp(){
   $('#gbtn').innerHTML='<span class="muted" style="margin:0">Abriendo MolarDash…</span>'; $('#hint').textContent='';
-  const admin=/^#\/admin\b/.test(location.hash);
-  const {data,error}=await sb.from('app_bundle').select('html').eq('id',admin?'admin':'app').maybeSingle();
-  if(admin&&!error&&!data){ location.hash='#/inicio'; return cargarApp(); }
+  const {data:estado,error:eAcc}=await sb.rpc('mi_acceso');
+  const sinMigracion=eAcc&&eAcc.code==='PGRST202'; // la base aún no tiene la aprobación de accesos
+  if(!sinMigracion&&(eAcc||estado!=='aprobado')){
+    await sb.auth.signOut();
+    msg(estado==='bloqueado'?'Tu acceso a MolarDash está desactivado. Pide al administrador que lo active.'
+       :estado==='pendiente'?'Recibimos tu solicitud. Podrás entrar a MolarDash en cuanto el administrador la apruebe.'
+       :'No se pudo verificar tu acceso. Intenta de nuevo en un momento.');
+    return mostrarLogin();
+  }
+  const ruta=/^#\/accesos\b/.test(location.hash)?'accesos':/^#\/admin\b/.test(location.hash)?'admin':'app';
+  const {data,error}=await sb.from('app_bundle').select('html').eq('id',ruta).maybeSingle();
+  if(ruta!=='app'&&!error&&!data){ location.hash='#/inicio'; return cargarApp(); }
   if(error||!data){ await sb.auth.signOut(); msg('Tu cuenta no tiene acceso a MolarDash. Pide al administrador que la active.'); return mostrarLogin(); }
   document.open(); document.write(data.html); document.close();
 }
