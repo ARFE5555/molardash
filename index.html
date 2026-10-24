@@ -100,13 +100,14 @@
   .segmented button{position:relative;z-index:1;border:0;background:transparent;font-family:inherit;font-size:13px;font-weight:500;color:var(--ink);padding:7px 16px;border-radius:7px;cursor:pointer;white-space:nowrap}
   .segmented .thumb{position:absolute;top:2px;bottom:2px;left:2px;background:#fff;border-radius:7px;box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04);transition:left .32s var(--ease),width .32s var(--ease)}
 
-  .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
-  .tile{grid-column:span 6;background:var(--white);border-radius:28px;padding:44px 40px;overflow:hidden;position:relative;transition:opacity .4s var(--ease),transform .4s var(--ease)}
-  .tile.w7{grid-column:span 7}.tile.w5{grid-column:span 5}.tile.full{grid-column:1/-1}
+  .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:20px;position:relative;align-content:start;min-height:calc(100vh - 150px)}
+  .seg-scroll{scroll-margin-top:64px}
+  .tile{grid-column:span 6;background:var(--white);border-radius:28px;padding:44px 40px;overflow:hidden;position:relative}
+  .tile.w7{grid-column:span 7}.tile.w5{grid-column:span 5}.tile.full,.bento .tile.solo{grid-column:1/-1}
   .tile.dark{background:#000;color:#f5f5f7}
   .tile.dark p{color:#a1a1a6}
   .tile.hide{display:none}
-  .tile.fade{opacity:0;transform:scale(.98)}
+  .tile.ghost{position:absolute;margin:0;grid-column:auto;grid-row:auto;pointer-events:none;z-index:0}
   .label{font-size:14px;font-weight:600;color:var(--link);margin-bottom:10px}
   .tile.dark .label{color:var(--sky)}
   .tile h3{font-size:clamp(28px,3.4vw,40px);font-weight:700;letter-spacing:-.035em;line-height:1.1;margin-bottom:14px}
@@ -414,14 +415,69 @@
   renderFeatures("all");
   segmented(document.getElementById("featSeg"), b => renderFeatures(b.dataset.status));
 
-  /* Filtro de paneles */
-  const tiles = [...document.querySelectorAll(".tile")];
+  /* Filtro de paneles con animación:
+     - los que se ocultan se encogen y desvanecen en su sitio
+     - los que se quedan se deslizan a su nueva posición
+     - los nuevos entran subiendo, uno tras otro */
+  const bento = document.getElementById("bento");
+  const tiles = [...bento.querySelectorAll(".tile")];
+  const EASE = "cubic-bezier(.25,.1,.25,1)";
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   function filterTiles(cat){
-    tiles.forEach(t => {
-      const show = cat==="all" || t.dataset.cat===cat;
-      if(show){ t.classList.remove("hide"); t.classList.add("fade","in"); requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.remove("fade"))); }
-      else t.classList.add("hide");
+    const show = t => cat==="all" || t.dataset.cat===cat;
+    // Lleva el selector arriba para ver el resultado completo, sin saltos
+    const seg = document.querySelector("#info .seg-scroll");
+    if(seg.getBoundingClientRect().top < 40 || seg.getBoundingClientRect().top > innerHeight*.5)
+      seg.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block:"start"});
+    bento.querySelectorAll(".ghost").forEach(g => g.remove());
+    tiles.forEach(t => { t.getAnimations().forEach(a => a.finish()); t.classList.add("in"); });
+
+    // 1) Posiciones antes del cambio
+    const box = bento.getBoundingClientRect();
+    const before = new Map();
+    tiles.forEach(t => { if(!t.classList.contains("hide")) before.set(t, t.getBoundingClientRect()); });
+
+    const leaving  = tiles.filter(t => before.has(t) && !show(t));
+    const entering = tiles.filter(t => !before.has(t) && show(t));
+    const staying  = tiles.filter(t => before.has(t) && show(t));
+
+    // 2) Copias "fantasma" de los que salen, fijas donde estaban
+    const ghosts = reduceMotion ? [] : leaving.map(t => {
+      const r = before.get(t), g = t.cloneNode(true);
+      g.querySelectorAll("[id]").forEach(e => e.removeAttribute("id"));
+      g.classList.add("ghost"); g.removeAttribute("data-cat");
+      Object.assign(g.style, { left:(r.left-box.left)+"px", top:(r.top-box.top)+"px", width:r.width+"px", height:r.height+"px" });
+      bento.appendChild(g);
+      return g;
     });
+
+    // 3) Nuevo diseño
+    leaving.forEach(t => t.classList.add("hide"));
+    entering.forEach(t => t.classList.remove("hide"));
+    tiles.forEach(t => t.classList.toggle("solo", cat!=="all"));
+    if(reduceMotion) return;
+
+    // 4) Animaciones
+    ghosts.forEach(g => g.animate(
+      [{opacity:1, transform:"scale(1)"}, {opacity:0, transform:"scale(.9)"}],
+      {duration:260, easing:"ease-in", fill:"forwards"}
+    ).onfinish = () => g.remove());
+
+    staying.forEach(t => {
+      const a = before.get(t), b = t.getBoundingClientRect();
+      if(Math.abs(a.width-b.width)>2){            // cambió de tamaño: entra de nuevo, sin deformarse
+        entering.unshift(t); return;
+      }
+      const dx = a.left-b.left, dy = a.top-b.top;
+      if(Math.abs(dx)>1 || Math.abs(dy)>1)
+        t.animate([{transform:`translate(${dx}px,${dy}px)`}, {transform:"none"}], {duration:560, easing:EASE});
+    });
+
+    entering.forEach((t,i) => t.animate(
+      [{opacity:0, transform:"translateY(40px) scale(.96)"}, {opacity:1, transform:"none"}],
+      {duration:600, delay:240 + i*80, easing:EASE, fill:"backwards"}
+    ));
   }
   const mainSeg = segmented(document.getElementById("seg"), b => filterTiles(b.dataset.filter));
   document.querySelectorAll("[data-jump]").forEach(a => a.addEventListener("click", () => mainSeg.pick(a.dataset.jump)));
