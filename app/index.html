@@ -40,6 +40,10 @@ button{font:inherit;border:1px solid #d5dde9;background:#fff;border-radius:8px;p
 <p class="muted" id="hint">Entra con tu cuenta de Google.</p>
 </div></div>
 <script>
+// Direcciones: molardash.com = presentación · /app/ = aplicación · /accesos/ = panel de accesos
+if(/^#\/(accesos|admin)\b/.test(location.hash)) location.replace('/accesos/');
+</script>
+<script>
 (()=>{
 const SUPABASE_URL='https://quxegznlgbzrtrqlqxgq.supabase.co';
 const SUPABASE_KEY='sb_publishable_hEFzoaq8yS2JckeRq9UYhw_Qm9AHuSG';
@@ -76,10 +80,9 @@ async function cargarApp(){
        :'No se pudo verificar tu acceso. Intenta de nuevo en un momento.');
     return mostrarLogin();
   }
-  const ruta=/^#\/accesos\b/.test(location.hash)?'accesos':/^#\/admin\b/.test(location.hash)?'admin':'app';
+  const ruta='app';
   document.body.dataset.abriendo='1';
   const {data,error}=await sb.from('app_bundle').select('html').eq('id',ruta).maybeSingle();
-  if(ruta!=='app'&&!error&&!data){ location.hash='#/inicio'; return cargarApp(); }
   if(error||!data){ delete document.body.dataset.abriendo; quitarSplash(); await sb.auth.signOut(); msg('Tu cuenta no tiene acceso a MolarDash. Pide al administrador que la active.'); return mostrarLogin(); }
   await splashListo;
   document.open(); document.write(data.html); document.close();

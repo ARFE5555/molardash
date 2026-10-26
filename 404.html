@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>MolarDash</title>
+<script>
+// Cualquier dirección que no sea la presentación, /app/ o /accesos/ vuelve a la presentación
+(function(){
+  var p = decodeURIComponent(location.pathname).toLowerCase().replace(/\/+$/, '');
+  if (/^\/(app|aplicacion|aplicación|login|entrar|ingresar)$/.test(p)) return location.replace('/app/' + location.hash);
+  if (/^\/(accesos|acceso|admin)$/.test(p)) return location.replace('/accesos/');
+  location.replace('/');
+})();
+</script>
+<meta http-equiv="refresh" content="2;url=/">
+</head>
+<body style="font-family:system-ui,sans-serif;text-align:center;padding:60px 16px;color:#5b6b82">
+<p>Redirigiendo a <a href="/">molardash.com</a>…</p>
+</body>
+</html>

@@ -2,5 +2,9 @@
 
 Sitio de MolarDash.
 
-- `index.html` — página de presentación (portada de molardash.com).
-- `app/index.html` — pantalla de acceso. El sistema se carga solo después de iniciar sesión con una cuenta autorizada.
+| Dirección | Qué es |
+|---|---|
+| `molardash.com` (`index.html`) | Página de presentación |
+| `molardash.com/app/` (`app/index.html`) | La aplicación: ingreso con Google y, si la cuenta está aprobada, el sistema |
+| `molardash.com/accesos/` (`accesos/index.html`) | Panel de accesos: quién tiene acceso, quién está pendiente y quién está bloqueado. Solo el administrador de MolarDash |
+| Cualquier otra (`404.html`) | Vuelve a la presentación (`/login` o `/entrar` llevan a la aplicación; `/admin` a accesos) |

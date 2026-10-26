@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>MolarDash · Accesos</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="alternate icon" href="/favicon.ico">
+<link rel="preload" href="/intro-claro.mp4" as="video" type="video/mp4">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="MolarDash">
+<meta name="application-name" content="MolarDash">
+<meta name="theme-color" content="#0f1b2d">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#0f1b2d;font-size:14px}
+.login{min-height:100vh;display:grid;place-items:center;padding:16px;box-sizing:border-box;background:linear-gradient(160deg,#0b1f3a 0%,#1d3d6e 100%)}
+.card{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:400px;width:100%;box-sizing:border-box;text-align:center;padding:34px 28px}
+h1{margin:0 0 6px;font-size:22px}.sub{color:#5b6b82;margin:0 0 20px;font-size:13px;line-height:1.45}
+.muted{color:#5b6b82;font-size:12px;margin-top:14px}.info{background:#e9eff8;color:#1d3d6e;border-radius:8px;padding:10px 12px;font-size:13px;text-align:left;margin-bottom:14px}
+#splash{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#ffffff;transition:opacity .45s ease}
+#splash.fuera{opacity:0;pointer-events:none}
+#splash video,#splash svg{width:min(80vw,560px);height:auto;display:block}
+#splash button{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));background:transparent;border:0;color:#8a97a8;font-weight:500;font-size:12px}
+button{font:inherit;border:1px solid #d5dde9;background:#fff;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;color:#0f1b2d}
+</style>
+</head>
+<body>
+<div id="splash" aria-hidden="true"><video id="intro" src="/intro-claro.mp4" muted playsinline preload="auto" disablepictureinpicture></video><button type="button" id="saltar">Saltar</button></div>
+<div class="login"><div class="card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 572 128" width="220" height="49" role="img" aria-label="MolarDash" style="display:block;margin:0 auto 14px"><title>MolarDash</title><svg x="0" y="0" width="128" height="128" viewBox="0 0 64 64" overflow="visible"><g fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 24H10" stroke="#38bdf8"/><path d="M3 31H10" stroke="#38bdf8"/><path d="M6 38H10" stroke="#38bdf8"/><g stroke="#0f1b2d"><path d="M16 22C16 14 19 10 24 10C28 10 30 15 32 22C34 15 36 10 40 10C45 10 48 14 48 22"/><path d="M16 22C16 32 17 40 18 47C18.5 51 20 54 22.5 54C25 54 26 51 26.5 46C27 41 28.5 38 32 38"/><path d="M48 22C48 32 47 40 46 47C45.5 51 44 54 41.5 54C39 54 38 51 37.5 46C37 41 35.5 38 32 38"/></g></g></svg><path d="M125.3125 97.466796875H141.169921875V68.4921875C141.169921875 64.08984375 140.85546875 56.048828125 140.67578125 48.3671875C142.876953125 56.18359375 145.123046875 64.1796875 146.515625 68.4921875L156.30859375 97.466796875H169.380859375L178.994140625 68.4921875C180.431640625 64.0 182.72265625 55.599609375 184.96875 47.46875C184.7890625 55.419921875 184.4296875 63.91015625 184.4296875 68.4921875V97.466796875H200.287109375V30.533203125H176.34375L167.80859375 56.8125C166.55078125 61.080078125 164.529296875 68.447265625 162.8671875 74.78125C161.205078125 68.447265625 159.138671875 61.080078125 157.8359375 56.8125L149.2109375 30.533203125H125.3125Z M228.692109375 98.544921875C243.56125 98.544921875 253.62375 88.796875 253.62375 73.748046875C253.62375 58.7890625 243.56125 48.951171875 228.692109375 48.951171875C213.82296875 48.951171875 203.715546875 58.7890625 203.715546875 73.748046875C203.715546875 88.796875 213.82296875 98.544921875 228.692109375 98.544921875ZM228.692109375 86.236328125C223.2565625 86.236328125 219.39328125 81.7890625 219.39328125 73.748046875C219.39328125 65.751953125 223.301484375 61.259765625 228.692109375 61.259765625C234.082734375 61.259765625 237.9909375 65.751953125 237.9909375 73.748046875C237.9909375 81.7890625 234.082734375 86.236328125 228.692109375 86.236328125Z M272.5053125 30.533203125H257.0521875V97.466796875H272.5053125Z M292.42007812500003 98.275390625C299.11343750000003 98.275390625 303.38101562500003 95.939453125 306.21109375000003 90.818359375H306.39078125000003V97.466796875H321.48453125000003V65.52734375C321.48453125000003 55.060546875 313.89273437500003 48.99609375 300.10171875000003 48.99609375C286.35562500000003 48.99609375 278.58414062500003 55.10546875 277.91031250000003 65.392578125H292.28531250000003C292.59976562500003 62.158203125 295.25015625000003 60.091796875 299.56265625000003 60.091796875C303.65054687500003 60.091796875 306.16617187500003 62.0234375 306.16617187500003 64.853515625V65.078125C306.16617187500003 67.908203125 303.06656250000003 68.58203125 294.57632812500003 69.30078125C284.46890625000003 70.109375 276.15835937500003 73.568359375 276.15835937500003 84.21484375C276.15835937500003 93.6484375 282.94156250000003 98.275390625 292.42007812500003 98.275390625ZM297.13687500000003 88.16796875C293.36343750000003 88.16796875 290.80289062500003 86.416015625 290.80289062500003 83.49609375C290.80289062500003 80.396484375 293.76773437500003 78.689453125 297.90054687500003 78.060546875C301.71890625000003 77.431640625 304.63882812500003 76.84765625 306.30093750000003 76.083984375V80.396484375C306.30093750000003 85.068359375 302.30289062500003 88.16796875 297.13687500000003 88.16796875Z M326.88953125 97.466796875H342.34265625V73.1640625C342.34265625 66.42578125 346.161015625 62.5625 351.68640625 62.5625C353.9325 62.5625 356.672734375 62.65234375 357.79578125 62.697265625V49.939453125C356.53796875 49.89453125 355.235234375 49.849609375 353.573125 49.849609375C347.239140625 49.849609375 343.6903125 52.365234375 341.98328125 58.384765625H341.848515625V50.029296875H326.88953125Z" fill="#0f1b2d"/><path d="M384.718359375 97.466796875C405.292578125 97.466796875 418.140234375 84.439453125 418.140234375 64.0C418.140234375 43.560546875 405.112890625 30.533203125 384.718359375 30.533203125H359.8765625V97.466796875ZM376.0484375 83.990234375V44.009765625H383.730078125C396.038671875 44.009765625 401.878515625 50.79296875 401.878515625 64.0C401.878515625 77.162109375 396.1734375 83.990234375 383.909765625 83.990234375Z M436.07843749999995 98.275390625C442.77179687499995 98.275390625 447.03937499999995 95.939453125 449.86945312499995 90.818359375H450.04914062499995V97.466796875H465.14289062499995V65.52734375C465.14289062499995 55.060546875 457.55109374999995 48.99609375 443.76007812499995 48.99609375C430.01398437499995 48.99609375 422.24249999999995 55.10546875 421.56867187499995 65.392578125H435.94367187499995C436.25812499999995 62.158203125 438.90851562499995 60.091796875 443.22101562499995 60.091796875C447.30890624999995 60.091796875 449.82453124999995 62.0234375 449.82453124999995 64.853515625V65.078125C449.82453124999995 67.908203125 446.72492187499995 68.58203125 438.23468749999995 69.30078125C428.12726562499995 70.109375 419.81671874999995 73.568359375 419.81671874999995 84.21484375C419.81671874999995 93.6484375 426.59992187499995 98.275390625 436.07843749999995 98.275390625ZM440.79523437499995 88.16796875C437.02179687499995 88.16796875 434.46124999999995 86.416015625 434.46124999999995 83.49609375C434.46124999999995 80.396484375 437.42609374999995 78.689453125 441.55890624999995 78.060546875C445.37726562499995 77.431640625 448.29718749999995 76.84765625 449.95929687499995 76.083984375V80.396484375C449.95929687499995 85.068359375 445.96124999999995 88.16796875 440.79523437499995 88.16796875Z M491.4814843749999 98.634765625C504.7783593749999 98.634765625 513.7627343749999 92.076171875 513.7627343749999 82.328125C513.7627343749999 75.275390625 509.1807031249999 71.1875 499.4326562499999 69.390625L489.9092187499999 67.638671875C486.6299218749999 67.009765625 484.7881249999999 65.70703125 484.7881249999999 63.73046875C484.7881249999999 61.39453125 487.1240624999999 59.642578125 491.1670312499999 59.642578125C495.2549218749999 59.642578125 498.2197656249999 62.11328125 498.3096093749999 65.4375H512.5498437499999C512.2803124999999 55.330078125 503.8799218749999 49.041015625 490.6279687499999 49.041015625C477.4209374999999 49.041015625 469.3799218749999 55.060546875 469.3799218749999 64.44921875C469.3799218749999 71.951171875 474.3662499999999 76.7578125 483.7099999999999 78.419921875L492.2900781249999 79.947265625C496.0635156249999 80.62109375 498.0400781249999 81.87890625 498.0400781249999 83.9453125C498.0400781249999 86.326171875 495.5244531249999 87.98828125 491.2568749999999 87.98828125C486.7197656249999 87.98828125 483.9795312499999 85.787109375 483.5303124999999 82.283203125H468.3017968749999C469.1553124999999 92.390625 478.3642968749999 98.634765625 491.4814843749999 98.634765625Z M532.3298437499999 71.681640625C532.3298437499999 65.212890625 535.4743749999999 62.203125 540.3708593749999 62.203125C545.2673437499999 62.203125 548.0974218749999 65.2578125 548.0974218749999 70.873046875V97.466796875H563.5505468749999V67.638671875C563.5505468749999 55.958984375 557.5310156249999 48.99609375 547.2439062499999 48.99609375C540.2810156249999 48.99609375 535.5192968749999 52.140625 532.3298437499999 57.3515625V30.533203125H516.8767187499999V97.466796875H532.3298437499999Z" fill="#38bdf8"/></svg>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">MolarDash</h1><p class="sub">Accesos · quién puede entrar a MolarDash</p>
+<div id="msg"></div>
+<div id="gbtn" style="display:flex;justify-content:center;min-height:44px"><span class="muted" style="margin:0">Cargando…</span></div>
+<p class="muted" id="hint">Entra con la cuenta de Google del administrador.</p>
+<p class="muted"><a href="/app/" style="color:#5b6b82">Ir a la aplicación</a></p>
+</div></div>
+<script>
+// El botón "Volver a MolarDash" del panel deja #/inicio: eso es la aplicación
+if(/^#\/(?!accesos|admin)/.test(location.hash)) location.replace('/app/'+location.hash);
+</script>
+<script>
+(()=>{
+const SUPABASE_URL='https://quxegznlgbzrtrqlqxgq.supabase.co';
+const SUPABASE_KEY='sb_publishable_hEFzoaq8yS2JckeRq9UYhw_Qm9AHuSG';
+const GOOGLE_CLIENT_ID='181500076037-96bglt3ct8dahrojslqfr2nlf5pg012g.apps.googleusercontent.com';
+const $=s=>document.querySelector(s);
+/* Animación de apertura (claro): una vez por pestaña; la app se muestra cuando termina o al tocar "Saltar" */
+const splashListo=new Promise(fin=>{
+  const sp=$('#splash'), v=$('#intro'); let hecho=false;
+  const listo=()=>{ if(hecho) return; hecho=true; fin(); };
+  let visto=false; try{ visto=sessionStorage.getItem('md_intro')==='1'; sessionStorage.setItem('md_intro','1'); }catch(e){}
+  if(visto){ sp.remove(); return listo(); }
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){ v.remove(); setTimeout(listo,700); return; }
+  v.addEventListener('ended',listo); v.addEventListener('error',listo);
+  $('#saltar').addEventListener('click',listo); sp.addEventListener('click',listo);
+  v.play().catch(()=>setTimeout(listo,900));   // si el navegador no deja reproducir, se ve el logo un momento
+  setTimeout(listo,5000);                      // nunca bloquea más de 5 s
+});
+function quitarSplash(){ const sp=$('#splash'); if(!sp) return; sp.classList.add('fuera'); setTimeout(()=>sp.remove(),460); }
+splashListo.then(()=>{ if(!document.body.dataset.abriendo) quitarSplash(); });
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const wait=(f,ms=15000)=>new Promise((ok,ko)=>{const t0=Date.now();(function r(){if(f())return ok();if(Date.now()-t0>ms)return ko(new Error('No se pudo cargar Google. Revisa tu conexión.'));setTimeout(r,80)})()});
+async function sha256hex(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function msg(t){$('#msg').innerHTML=t?`<div class="info">${esc(t)}</div>`:''}
+async function cargarApp(){
+  $('#gbtn').innerHTML='<span class="muted" style="margin:0">Abriendo MolarDash…</span>'; $('#hint').textContent='';
+  const {data:estado,error:eAcc}=await sb.rpc('mi_acceso');
+  const sinMigracion=eAcc&&eAcc.code==='PGRST202'; // la base aún no tiene la aprobación de accesos
+  if(!sinMigracion&&(eAcc||estado!=='aprobado')){
+    delete document.body.dataset.abriendo; splashListo.then(quitarSplash);
+    await sb.auth.signOut();
+    msg(estado==='bloqueado'?'Tu acceso a MolarDash está desactivado. Pide al administrador que lo active.'
+       :estado==='pendiente'?'Recibimos tu solicitud. Podrás entrar a MolarDash en cuanto el administrador la apruebe.'
+       :'No se pudo verificar tu acceso. Intenta de nuevo en un momento.');
+    return mostrarLogin();
+  }
+  document.body.dataset.abriendo='1';
+  const {data,error}=await sb.from('app_bundle').select('html').eq('id','accesos').maybeSingle();
+  if(error||!data){
+    // Solo el administrador de MolarDash recibe el panel; los demás conservan su sesión para la aplicación
+    delete document.body.dataset.abriendo; quitarSplash();
+    $('#gbtn').innerHTML='<a href="/app/" style="display:inline-block;background:#0f1b2d;color:#fff;border-radius:999px;padding:10px 22px;font-weight:600;text-decoration:none">Ir a la aplicación</a>';
+    $('#hint').innerHTML='<a href="#" id="otra" style="color:#5b6b82">Entrar con otra cuenta</a>';
+    $('#otra').onclick=async e=>{ e.preventDefault(); await sb.auth.signOut(); msg(''); mostrarLogin(); };
+    msg('Esta cuenta no administra los accesos de MolarDash.'); return;
+  }
+  history.replaceState(null,'','/accesos/#/accesos');
+  await splashListo;
+  document.open(); document.write(data.html); document.close();
+}
+function errorIngreso(e){
+  const t=String(e?.message||e||'');
+  return /banned/i.test(t)?'Tu acceso a MolarDash está desactivado. Pide al administrador que lo active.':'No se pudo iniciar sesión: '+t;
+}
+async function mostrarLogin(){
+  $('#hint').textContent='Entra con la cuenta de Google del administrador.';
+  try{
+    await wait(()=>window.google?.accounts?.id);
+    const raw=crypto.randomUUID()+crypto.randomUUID(), hashed=await sha256hex(raw);
+    google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,nonce:hashed,auto_select:false,itp_support:true,callback:async r=>{
+      $('#gbtn').innerHTML='<span class="muted" style="margin:0">Entrando…</span>';
+      const {error}=await sb.auth.signInWithIdToken({provider:'google',token:r.credential,nonce:raw});
+      if(error){ msg(errorIngreso(error)); return mostrarLogin(); }
+      cargarApp();
+    }});
+    $('#gbtn').innerHTML='';
+    google.accounts.id.renderButton($('#gbtn'),{theme:'filled_blue',size:'large',text:'signin_with',shape:'pill',locale:'es',width:300});
+  }catch(e){ msg(e.message||String(e)); }
+}
+(async()=>{ const {data}=await sb.auth.getSession(); if(data.session) cargarApp(); else mostrarLogin(); })();
+})();
+</script>
+</body>
+</html>

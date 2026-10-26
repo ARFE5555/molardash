@@ -8,7 +8,8 @@
 <meta name="theme-color" content="#ffffff">
 <script>
   /* Enlaces antiguos de la app (molardash.com/#/inicio, #/admin, #/accesos) → /app/ */
-  if (/^#\//.test(location.hash)) location.replace("/app/" + location.hash);
+  if (/^#\/(accesos|admin)\b/.test(location.hash)) location.replace("/accesos/");
+  else if (/^#\//.test(location.hash)) location.replace("/app/" + location.hash);
 </script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
